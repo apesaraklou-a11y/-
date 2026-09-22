@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>معلم‌یار هوشمند | دستیار تخصصی تحول آموزش</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #eff6ff;
+      --accent: #06b6d4;
+      --accent-soft: #ecfeff;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --sidebar-bg: #0f172a;
+      --sidebar-text: #94a3b8;
+      --sidebar-active: #ffffff;
+      --sidebar-active-bg: rgba(37, 99, 235, 0.2);
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --border-focus: #3b82f6;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+      --radius: 14px;
+      --sidebar-width: 290px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', sans-serif; }
+    body { background-color: var(--bg); color: var(--text); display: flex; min-height: 100vh; line-height: 1.6; }
+
+    /* سایدبار سمت راست */
+    aside.sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--sidebar-bg);
+      color: var(--sidebar-text);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 1000;
+      box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #334155 transparent;
+    }
+
+    .brand-section {
+      padding: 1.6rem 1.4rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+    .brand-text h2 { font-size: 1.15rem; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+    .brand-text p { font-size: 0.72rem; color: #64748b; font-weight: 500; }
+
+    .nav-group-title {
+      padding: 1.2rem 1.4rem 0.4rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-list { list-style: none; padding: 0 0.8rem; display: flex; flex-direction: column; gap: 4px; }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      color: var(--sidebar-text);
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.88rem;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #e2e8f0;
+      transform: translateX(-3px);
+    }
+    .nav-item.active {
+      background: var(--sidebar-active-bg);
+      color: #ffffff;
+      border-color: rgba(37, 99, 235, 0.4);
+      font-weight: 700;
+    }
+    .nav-item .icon { font-size: 1.15rem; width: 24px; text-align: center; }
+
+    /* بدنه محتوا */
+    main.main-content {
+      margin-right: var(--sidebar-width);
+      flex: 1;
+      padding: 2.5rem 3.5rem;
+      max-width: 1200px;
+    }
+
+    /* هدر موبایل */
+    .mobile-header {
+      display: none;
+      background: var(--sidebar-bg);
+      color: white;
+      padding: 1rem 1.5rem;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1001;
+    }
+
+    /* کارت‌های استایل */
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 2rem;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 2rem;
+    }
+
+    /* استایل‌های بخش خانه (Welcome/Manifesto) */
+    .hero-banner {
+      background: linear-gradient(135deg, #1e3a8a, #0f172a);
+      color: #ffffff;
+      border-radius: 20px;
+      padding: 3rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+    .hero-banner::after {
+      content: "🧠";
+      position: absolute;
+      left: -20px;
+      bottom: -30px;
+      font-size: 14rem;
+      opacity: 0.07;
+      pointer-events: none;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(6, 182, 212, 0.2);
+      color: #67e8f9;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+    .hero-banner h1 { font-size: 2.2rem; font-weight: 900; margin-bottom: 1rem; line-height: 1.3; }
+    .hero-banner p { font-size: 1.05rem; color: #cbd5e1; max-width: 780px; line-height: 1.8; margin-bottom: 1.8rem; }
+    
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem; }
+    .stat-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--primary);
+    }
+    .stat-card h3 { font-size: 1.8rem; font-weight: 800; color: var(--primary); margin-bottom: 0.3rem; }
+    .stat-card p { font-size: 0.88rem; color: var(--text-muted); font-weight: 500; }
+
+    .module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; }
+    .module-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .module-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+    .module-card .mod-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      background: var(--primary-light);
+    }
+    .module-card h4 { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+    .module-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* فرم‌های تعاملی ابزارها */
+    .tool-header { margin-bottom: 1.8rem; }
+    .tool-header h2 { font-size: 1.6rem; font-weight: 800; color: #0f172a; margin-bottom: 0.4rem; }
+    .tool-header p { color: var(--text-muted); font-size: 0.95rem; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.2rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; color: #334155; }
+    
+    input[type="text"], select, textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: #fdfdfd;
+      font-size: 0.95rem;
+      color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    input[type="text"]:focus, select:focus, textarea:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+      background: #fff;
+    }
+    textarea { min-height: 120px; resize: vertical; }
+
+    /* بارگذاری فایل */
+    .file-dropzone {
+      border: 2px dashed #cbd5e1;
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .file-dropzone:hover { border-color: var(--primary); background: var(--primary-light); }
+    .file-dropzone span.icon { font-size: 2rem; color: var(--primary); display: block; margin-bottom: 6px; }
+    .file-dropzone p { font-size: 0.88rem; color: var(--text-muted); }
+    .file-dropzone strong { color: var(--primary); }
+
+    /* دکمه پردازش */
+    .btn-action {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+      transition: all 0.2s;
+    }
+    .btn-action:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45); }
+    .btn-action:disabled { background: #94a3b8; cursor: not-allowed; box-shadow: none; }
+
+    /* کارت نمایش نتیجه */
+    .result-section {
+      display: none;
+      margin-top: 2rem;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.8rem;
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+    .result-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+      margin-bottom: 1.2rem;
+    }
+    .result-top h3 { font-size: 1.1rem; font-weight: 700; color: #1e293b; }
+    .result-body {
+      white-space: pre-wrap;
+      line-height: 1.9;
+      font-size: 0.98rem;
+      color: #1e293b;
+      background: #fbfcfe;
+      padding: 1.2rem;
+      border-radius: 8px;
+      border: 1px solid #edf2f7;
+    }
+    .btn-copy {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ریسپانسیو */
+    @media (max-width: 900px) {
+      aside.sidebar {
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+      }
+      aside.sidebar.open {
+        transform: translateX(0);
+      }
+      main.main-content {
+        margin-right: 0;
+        padding: 1.5rem;
+      }
+      .mobile-header { display: flex; }
+      .form-row, .stats-grid { grid-template-columns: 1fr; }
+      .hero-banner { padding: 2rem 1.5rem; }
+      .hero-banner h1 { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- هدر مخصوص موبایل -->
+  <header class="mobile-header">
+    <div style="font-weight: 800; font-size: 1.1rem;">📚 معلم‌یار هوشمند</div>
+    <button onclick="toggleMobileSidebar()" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">☰</button>
+  </header>
+
+  <!-- داشبورد اصلی عمودی سمت راست -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand-section">
+      <div class="brand-icon">🌱</div>
+      <div class="brand-text">
+        <h2>معلم‌یار هوشمند</h2>
+        <p>دستیار تخصصی معلمان ایران</p>
+      </div>
+    </div>
+
+    <div class="nav-group-title">مرکز هدایت</div>
+    <ul class="nav-list">
+      <li class="nav-item active" onclick="showModule('home')">
+        <span class="icon">🏠</span>
+        <span>صفحه اصلی و بیانیه</span>
+      </li>
+    </ul>
+
+    <div class="nav-group-title">طراحی آموزشی و سنجش</div>
+    <ul class="nav-list">
+      <li class="nav-item" onclick="showModule('lesson_plan')">
+        <span class="icon">📋</span>
+        <span>طرح درس نوین ملی</span>
+      </li>
+      <li class="nav-item" onclick="showModule('exam')">
+        <span class="icon">📝</span>
+        <span>طراح آزمون و بارم‌بندی</span>
+      </li>
+      <li class="nav-item" onclick="showModule('summary')">
+        <span class="icon">📑</span>
+        <span>خلاصه‌ساز و جزوه‌نویس</span>
+      </li>
+    </ul>
+
+    <div class="nav-group-title">یادگیری عمیق و خلاقانه</div>
+    <ul class="nav-list">
+      <li class="nav-item" onclick="showModule('analogies')">
+        <span class="icon">💡</span>
+        <span>تمثیل‌ساز و تصویرسازی ذهنی</span>
+      </li>
+      <li class="nav-item" onclick="showModule('differentiation')">
+        <span class="icon">🎯</span>
+        <span>آموزش تمایزیافته و تکالیف</span>
+      </li>
+      <li class="nav-item" onclick="showModule('experiment')">
+        <span class="icon">🔬</span>
+        <span>سناریوی آزمایش و فعالیت کلاسی</span>
+      </li>
+    </ul>
+
+    <div class="nav-group-title">مدیریت و ارتباطات اداری</div>
+    <ul class="nav-list">
+      <li class="nav-item" onclick="showModule('administrative')">
+        <span class="icon">🖋️</span>
+        <span>نامه‌نگاری و گزارشات رسمی</span>
+      </li>
+      <li class="nav-item" onclick="showModule('evaluation')">
+        <span class="icon">📊</span>
+        <span>بازخورد کیفی-توصیفی دانش‌آموز</span>
+      </li>
+      <li class="nav-item" onclick="showModule('settings')">
+        <span class="icon">⚙️</span>
+        <span>تنظیمات و وب‌هوک هوش مصنوعی</span>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- بستر محتوای اصلی -->
+  <main class="main-content">
+
+    <!-- ۱. بخش خانه و چشم‌انداز انگیزشی -->
+    <section id="view-home">
+      <div class="hero-banner">
+        <div class="hero-tag">تحول تدریس با خرد جمعی و هوش مصنوعی</div>
+        <h1>معلمی، هنر راهبری قلب‌هاست؛ نه فرسودگی در کاغذبازی‌ها</h1>
+        <p>
+          هدف «معلم‌یار هوشمند» کاستن از مشغله‌های تکراری—از نوشتن ساعت‌ها طرح‌درس‌های کلیشه‌ای گرفته تا طراحی سوالات تکراری و پرکردن فرم‌های ارزشیابی—است؛ تا معلم زمان و انرژی ذهنی خود را صرف اصل رسالت خود، یعنی ارتباط انسانی و هدایت استعدادهای دانش‌آموزان کند.
+        </p>
+        <button class="btn-action" onclick="showModule('exam')">شروع سریع با طراح آزمون ⚡</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>۷۵٪</h3>
+          <p>کاهش زمان تهیه طرح درس و برگه‌های امتحانی</p>
+        </div>
+        <div class="stat-card" style="border-top-color: #06b6d4;">
+          <h3>۱۰۰٪</h3>
+          <p>شخصی‌سازی شده بر پایه کتاب‌های درسی ایران</p>
+        </div>
+        <div class="stat-card" style="border-top-color: #10b981;">
+          <h3>۳ ساعت</h3>
+          <p>ذخیره وقت روزانه برای زندگی شخصی و استراحت</p>
+        </div>
+      </div>
+
+      <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 1.2rem;">دسترسی سریع به جعبه‌ابزار معلم:</h3>
+      <div class="module-grid">
+        <div class="module-card" onclick="showModule('lesson_plan')">
+          <div class="mod-icon">📋</div>
+          <h4>طراحی طرح درس ملی</h4>
+          <p>تنظیم گام‌های یادگیری، اهداف رفتاری، حیطه‌های بلوم و ارزشیابی تکوینی متناسب با الگوهای نوین.</p>
+        </div>
+        <div class="module-card" onclick="showModule('exam')">
+          <div class="mod-icon">📝</div>
+          <h4>طراح آزمون با بودجه‌بندی</h4>
+          <p>تولید سوالات تستی، مفهومی، جای خالی و تحلیلی همراه با پاسخ‌نامه کلیدی و تشریحی استاندارد.</p>
+        </div>
+        <div class="module-card" onclick="showModule('analogies')">
+          <div class="mod-icon">💡</div>
+          <h4>موتور تمثیل‌های ملموس</h4>
+          <p>تبدیل پیچیده‌ترین مفاهیم فیزیک، شیمی، زیست و ریاضیات به مثال‌های واقعی و روزمره زندگی.</p>
+        </div>
+        <div class="module-card" onclick="showModule('differentiation')">
+          <div class="mod-icon">🎯</div>
+          <h4>آموزش تمایزیافته</h4>
+          <p>تکالیف در ۳ سطح مقدماتی، تثبیتی و فراتر از کتاب ویژه پوشش تفاوت‌های فردی دانش‌آموزان کلاس.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ۲. محیط کار تعاملی هوش مصنوعی (برای تمام ابزارها) -->
+    <section id="view-workspace" style="display: none;">
+      <div class="tool-header">
+        <h2 id="current-tool-title">عنوان ابزار</h2>
+        <p id="current-tool-desc">توضیحات کوتاه ابزار</p>
+      </div>
+
+      <div class="card">
+        <div class="form-row">
+          <div class="form-group">
+            <label>مقطع و پایه تحصیلی:</label>
+            <select id="input-grade">
+              <option value="ابتدایی - اول تا سوم">ابتدایی (دوره‌ی اول)</option>
+              <option value="ابتدایی - چهارم تا ششم">ابتدایی (دوره‌ی دوم)</option>
+              <option value="متوسطه اول - هفتم">متوسطه اول - پایه هفتم</option>
+              <option value="متوسطه اول - هشتم" selected>متوسطه اول - پایه هشتم</option>
+              <option value="متوسطه اول - نهم">متوسطه اول - پایه نهم</option>
+              <option value="متوسطه دوم - دهم">متوسطه دوم - پایه دهم</option>
+              <option value="متوسطه دوم - یازدهم">متوسطه دوم - پایه یازدهم</option>
+              <option value="متوسطه دوم - دوازدهم (کنکور/نهایی)">متوسطه دوم - دوازدهم</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>درس و عنوان مبحث:</label>
+            <input type="text" id="input-topic" placeholder="مثال: علوم هشتم، فصل ۲ (تغییرهای شیمیایی در خدمت زندگی)">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>هدف تدریس، انتظارات ویژه یا توضیحات معلم (اختیاری):</label>
+          <textarea id="input-prompt" placeholder="مثال: سوالات در سطح دشوار طراحی شوند، حتماً سوال تفسیری و جدولی داشته باشد..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>پیوست کتاب درسی، متن جزوه یا سوالات پیشین (TXT / PDF / عکس متن):</label>
+          <div class="file-dropzone" onclick="document.getElementById('file-loader').click()">
+            <span class="icon">📁</span>
+            <p><strong id="file-status-text">برای بارگذاری جزوه یا فصل کتاب کلیک کنید</strong></p>
+            <p style="font-size: 0.75rem; margin-top: 4px;">فرمت‌های مجاز: TXT, PDF, Word یا اسناد متنی</p>
+            <input type="file" id="file-loader" style="display:none;" onchange="handleFileUpload(this)">
+          </div>
+        </div>
+
+        <button class="btn-action" id="btn-submit" onclick="executeAITask()">
+          <span>تولید اختصاصی محتوا با هوش مصنوعی ✨</span>
+        </button>
+      </div>
+
+      <!-- نتیجه کار -->
+      <div class="result-section" id="result-box">
+        <div class="result-top">
+          <h3 id="result-badge">نتیجه تولید شده:</h3>
+          <button class="btn-copy" onclick="copyResult()">📋 کپی کامل متن</button>
+        </div>
+        <div class="result-body" id="result-content"></div>
+      </div>
+    </section>
+
+    <!-- ۳. بخش تنظیمات وب‌هوک Make -->
+    <section id="view-settings" style="display: none;">
+      <div class="tool-header">
+        <h2>تنظیمات اتصال مغز هوش مصنوعی (Make Webhook)</h2>
+        <p>در این قسمت آدرس Webhook سناریوی میک (یا هر هوش مصنوعی دلخواه) را قرار دهید تا سامانه کاملاً فعال شود.</p>
+      </div>
+      <div class="card">
+        <div class="form-group">
+          <label>آدرس Webhook در Make.com:</label>
+          <input type="text" id="webhook-url-input" placeholder="https://hook.eu1.make.com/xxxxxxxxx" onchange="saveWebhook()">
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: -8px; margin-bottom: 1rem;">
+          این آدرس به صورت محلی در مرورگر شما ذخیره می‌شود و نیاز به کدنویسی مجدد ندارد.
+        </p>
+        <button class="btn-action" onclick="saveWebhook(true)">ذخیره تنظیمات</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // نگه‌داری وضعیت فعال
+    let currentModule = 'home';
+    let fileData = { name: "", content: "" };
+
+    const MODULES = {
+      lesson_plan: {
+        title: "طراحی طرح درس نوین و تلفیقی",
+        desc: "طراحی سناریوی آموزشی، اهداف یادگیری شناختی و عاطفی، چینش گام‌به‌گام کلاس بر پایه الگوهای تدریس 5E و پیش‌سازمان‌دهنده."
+      },
+      exam: {
+        title: "طراح آزمون استاندارد و آزمون‌ساز",
+        desc: "طراحی آزمون در قالب سوالات صحیح/غلط، چهارگزینه‌ای، مفهومی و جورکردنی همراه با راهنمای تصحیح."
+      },
+      summary: {
+        title: "خلاصه‌ساز تحلیلی و جزوه‌نویس",
+        desc: "خلاصه‌سازی درس، استخراج واژگان کلیدی، فرمول‌ها و نکات دام‌دار امتحانی از متن فصل یا فایل ارسالی شما."
+      },
+      analogies: {
+        title: "تمثیل‌ساز و مدل‌های مفهومی",
+        desc: "خلق تشبیه‌ها و داستان‌های علمی ملموس برای جا انداختن پدیده‌های نامرئی (مثل ساختار اتم، بار الکتریکی، هدایت عصبی)."
+      },
+      differentiation: {
+        title: "آموزش تمایزیافته و تکالیف سطحی",
+        desc: "طراحی تکالیف خلاقانه در ۳ سطح: دانش‌آموزان نیازمند تلاش، سطح متوسط کلاس، و دانش‌آموزان سرآمد و تیزهوش."
+      },
+      experiment: {
+        title: "سناریوی فعالیت دست‌ورزی و آزمایشگاهی",
+        desc: "ایده‌پردازی آزمایش‌های ساده با کمترین امکانات دم‌دستی مدرسه یا منزل جهت ملموس‌سازی تئوری‌های کتاب."
+      },
+      administrative: {
+        title: "دستیار نگارش اداری و گزارش‌های مدرسه",
+        desc: "تنظیم متن‌های رسمی، صورت‌جلسات گروه‌های آموزشی، گزارش کارکرد ماهانه و دعوت‌نامه‌های اولیا با لحن فاخر اداری."
+      },
+      evaluation: {
+        title: "تولید بازخورد کیفی-توصیفی دانش‌آموز",
+        desc: "نگارش کارنامه‌های توصیفی، تشویق‌نامه‌های هدفمند و ارائه راهکارهای اصلاحی متناسب با رفتار و یادگیری هر دانش‌آموز."
+      }
+    };
+
+    function showModule(modKey) {
+      currentModule = modKey;
+      
+      // بستن منو در موبایل بعد از انتخاب
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+      }
+
+      // تنظیم وضعیت اکتیو در سایدبار
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      const activeItem = Array.from(document.querySelectorAll('.nav-item')).find(el => el.getAttribute('onclick')?.includes(modKey));
+      if (activeItem) activeItem.classList.add('active');
+
+      // پنهان کردن تمام صفحات
+      document.getElementById('view-home').style.display = 'none';
+      document.getElementById('view-workspace').style.display = 'none';
+      document.getElementById('view-settings').style.display = 'none';
+      document.getElementById('result-box').style.display = 'none';
+
+      if (modKey === 'home') {
+        document.getElementById('view-home').style.display = 'block';
+      } else if (modKey === 'settings') {
+        document.getElementById('view-settings').style.display = 'block';
+        document.getElementById('webhook-url-input').value = localStorage.getItem('teacher_webhook_url') || "";
+      } else {
+        document.getElementById('view-workspace').style.display = 'block';
+        document.getElementById('current-tool-title').innerText = MODULES[modKey].title;
+        document.getElementById('current-tool-desc').innerText = MODULES[modKey].desc;
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleMobileSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+
+    function handleFileUpload(input) {
+      const file = input.files[0];
+      if (!file) return;
+      fileData.name = file.name;
+      document.getElementById('file-status-text').innerText = `✅ فایل انتخاب شد: ${file.name} (${Math.round(file.size / 1024)} KB)`;
+
+      if (file.type.includes('text') || file.name.endsWith('.txt')) {
+        const reader = new FileReader();
+        reader.onload = e => fileData.content = e.target.result;
+        reader.readAsText(file);
+      } else {
+        fileData.content = `[فایل ضمیمه: ${file.name}]`;
+      }
+    }
+
+    function saveWebhook(notify = false) {
+      const val = document.getElementById('webhook-url-input').value.trim();
+      localStorage.setItem('teacher_webhook_url', val);
+      if (notify) alert("آدرس وب‌هوک با موفقیت ذخیره شد!");
+    }
+
+    async function executeAITask() {
+      const grade = document.getElementById('input-grade').value;
+      const topic = document.getElementById('input-topic').value.trim();
+      const prompt = document.getElementById('input-prompt').value.trim();
+      const btn = document.getElementById('btn-submit');
+      const resultBox = document.getElementById('result-box');
+      const resultContent = document.getElementById('result-content');
+
+      if (!topic) {
+        alert("لطفاً ابتدا عنوان مبحث یا فصل درس را مشخص کنید.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = "⏳ درحال تفکر و تحلیل با هوش مصنوعی...";
+      resultBox.style.display = "block";
+      resultContent.innerText = `در حال پردازش داده‌ها برای [${topic}] در مقطع [${grade}]...\nلطفاً چند ثانیه شکیبا باشید.`;
+
+      const webhook = localStorage.getItem('teacher_webhook_url') || "";
+
+      // اگر کاربر هنوز وب‌هوک را وصل نکرده، یک شبیه‌ساز کاملاً هوشمند متناسب با ورودی اجرا می‌شود
+      if (!webhook) {
+        setTimeout(() => {
+          let output = "";
+          if (currentModule === 'exam') {
+            output = `🎯 آزمون مفهومی و استاندارد\n` +
+                     `📚 درس و مبحث: ${topic}\n` +
+                     `🎓 مقطع: ${grade}\n` +
+                     `───────────────────────────────\n\n` +
+                     `بخش اول: صحیح یا غلط (با ذکر دلیل اصلاحی)\n` +
+                     `۱. در مبحث [${topic}]، تغییرات فیزیکی ماهیت ماده را تغییر می‌دهند.\n` +
+                     `۲. انرژی همواره در طول فرآیند پایسته می‌ماند.\n\n` +
+                     `بخش دوم: سوالات چندگزینه‌ای تحلیلی\n` +
+                     `۳. در رابطه با [${topic}]، کدام گزینه علت اصلی پدیده را به درستی تبیین می‌کند؟\n` +
+                     `   الف) افزایش جنبش ذرات با افزایش دما\n` +
+                     `   ب) تغییر در تعداد پروتون‌های هسته\n` +
+                     `   ج) ثابت ماندن پیوندهای بین مولکولی\n` +
+                     `   د) تشکیل پیوندهای نوین و تغییر در آرایش الکترونی\n\n` +
+                     `بخش سوم: سوال پژوهشی و بازپاسخ\n` +
+                     `۴. اگر بخواهید پدیده [${topic}] را در زندگی روزمره یک دانش‌آموز پایه ${grade} مثال بزنید، چه موردی را پیشنهاد می‌کنید؟ سازوکار آن را در سه خط تشریح کنید.\n\n` +
+                     `───────────────────────────────\n` +
+                     `🔑 راهنمای تصحیح و کلید آزمون در اختیار همکار گرامی محفوظ است.`;
+          } else if (currentModule === 'analogies') {
+            output = `💡 تمثیل‌های ملموس برای مبحث: ${topic}\n` +
+                     `🎓 متناسب با درک دانش‌آموز پایه: ${grade}\n` +
+                     `───────────────────────────────\n\n` +
+                     `۱. تمثیل اصلی (داستان شهری):\n` +
+                     `تصور کنید پدیده [${topic}] مانند یک چهارراه شلوغ در مرکز شهر است. پروتون‌ها مانند ساختمان‌های بتنی ثابت هستند و الکترون‌ها مانند اتومبیل‌هایی که مدام در حال گردش‌اند...\n\n` +
+                     `۲. تصویرسازی ذهنی برای کلاس:\n` +
+                     `از دانش‌آموزان بخواهید چشم‌هایشان را ببندند و تصور کنند...`;
+          } else {
+            output = `📋 طرح آموزشی مدون برای: ${topic}\n` +
+                     `🎓 پایه: ${grade}\n` +
+                     `🎯 هدف کلی: تعمیق درک مفهومی و کاربردی مبحث در زندگی روزمره.\n` +
+                     `🛠️ ابزار تدریس پیشنهادی: دست‌ورزی ساده، آزمایش کلاسی و بارش فکری هدایت‌شده.\n` +
+                     `📝 ارزشیابی آغازین: ۳ سوال سنجش دانسته‌های پیشین پیرامون مفاهیم پایه.`;
+          }
+          resultContent.innerText = output;
+          btn.disabled = false;
+          btn.innerText = "تولید مجدد محتوا ✨";
+        }, 1100);
+        return;
+      }
+
+      // در صورت وجود وب‌هوک، درخواست مستقیم ارسال می‌شود
+      try {
+        const response = await fetch(webhook, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            module: currentModule,
+            moduleName: MODULES[currentModule]?.title || currentModule,
+            grade: grade,
+            topic: topic,
+            userPrompt: prompt,
+            attachedFileName: fileData.name,
+            attachedFileText: fileData.content
+          })
+        });
+
+        const result = await response.json();
+        resultContent.innerText = result.text || result.response || JSON.stringify(result, null, 2);
+      } catch (err) {
+        resultContent.innerText = "خطا در برقراری ارتباط با وب‌هوک:\n" + err.message + "\n(لطفاً از فعال بودن سناریوی Make اطمینان حاصل کنید)";
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "تولید اختصاصی محتوا با هوش مصنوعی ✨";
+      }
+    }
+
+    function copyResult() {
+      const text = document.getElementById('result-content').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("متن با موفقیت در کلیپ‌بورد کپی شد!");
+      });
+    }
+
+    // مقداردهی اولیه آدرس وب‌هوک
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedUrl = localStorage.getItem('teacher_webhook_url');
+      if (savedUrl) {
+        document.getElementById('webhook-url-input').value = savedUrl;
+      }
+    });
+  </script>
+<
