@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>معلم‌یار هوشمند | دستیار تخصصی معلمان</title>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a0ca3;
+      --accent: #4cc9f0;
+      --bg: #f8fafc;
+      --sidebar-bg: #ffffff;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --sidebar-w: 260px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', sans-serif; }
+    body { background-color: var(--bg); color: var(--text); display: flex; min-height: 100vh; overflow-x: hidden; }
+
+    /* داشبورد عمودی سمت راست */
+    aside.sidebar {
+      width: var(--sidebar-w);
+      background: var(--sidebar-bg);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem 1rem;
+      position: fixed;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 100;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.03);
+    }
+    .brand {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .nav-item:hover { background: #f1f5f9; color: var(--primary); }
+    .nav-item.active { background: #eef2ff; color: var(--primary); font-weight: 800; }
+    .nav-item span.icon { font-size: 1.2rem; }
+
+    /* محتوای اصلی */
+    main.main-content {
+      margin-right: var(--sidebar-w);
+      flex: 1;
+      padding: 2.5rem;
+      max-width: 1000px;
+    }
+
+    .header-box { margin-bottom: 2rem; }
+    .header-box h1 { font-size: 1.8rem; color: var(--primary-dark); margin-bottom: 0.5rem; }
+    .header-box p { color: var(--text-muted); }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 1.8rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0,0,px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .nav-item:hover { background: #f1f5f9; color: var(--primary); }
+    .nav-item.active { background: #eef2ff; color: var(--primary); font-weight: 800; }
+    .nav-item span.icon { font-size: 1.2rem; }
+
+    /* محتوای اصلی */
+    main.main-content {
+      margin-right: var(--sidebar-w);
+      flex: 1;
+      padding: 2.5rem;
+      max-width: 1000px;
+    }
+
+    .header-box { margin-bottom: 2rem; }
+    .header-box h1 { font-size: 1.8rem; color: var(--primary-dark); margin-bottom: 0.5rem; }
+    .header-box p { color: var(--text-muted); }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 1.8rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+      margin-bottom: 2rem;
+    }
+
+    .form-group { margin-bottom: 1.2rem; }
+    label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.95rem; }
+    input[type="text"], select, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      outline: none;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+7, 238, 0.3);
+      transition: 0.2s;
+    }
+    .btn-submit:hover { background: var(--primary-dark); }
+    .btn-submit:disabled { background: #94a3b8; cursor: not-allowed; }
+
+    /* جعبه خروجی هوش مصنوعی */
+    .output-card {
+      display: none;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 1.8rem;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+    .output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.8rem;
+    }
+    .output-content { line-height: 1.8; white-space: pre-wrap; font-size: 1rem; }
+    .copy-btn {
+      background: #f1f5f9;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* ریسپانسیو در موبایل */
+    @media (max-width: 768px) {
+      aside.sidebar {
+        width: 100%;
+        position: relative;
+        border-left: none;
+        border-bottom: 1px solid var(--border);
+      }
+      body { flex-direction: column; }
+      main.main-content { margin-right: 0; padding: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- نوار کناری / داشبورد راست -->
+  <aside class="sidebar">
+    <div class="brand">
+      <span>📚</span> معلم‌یار هوشمند
+    </div>
+    <ul class="nav-list">
+      <li class="nav-item active" onclick="switchTab('exam', 'طراح آزمون و سوال')">
+        <span class="icon">📝</span> طراح آزمون استاندارد
+      </li>
+      <li class="nav-item" onclick="switchTab('lesson_plan', 'طراحی طرح درس')">
+        <span class="icon">📋</span> طرح درس ملی / نوین
+      </li>
+      <li class="nav-item" onclick="switchTab('summary', 'خلاصه‌ساز درس')">
+        <span class="icon">📑</span> جزوه و خلاصه نکات
+      </li>
+      <li class="nav-item" onclick="switchTab('analogies', 'تمثیل‌های علمی و تصویرسازی')">
+        <span class="icon">💡</span> تمثیل و مثال‌های شهودی
+      </li>
+      <li class="nav-item" onclick="switchTab('remedial', 'آموزش تمایزیافته و تکلیف خلاق')">
+        <span class="icon">🎯</span> تکالیف سطحی و تثبیتی
+      </li>
+    </ul>
+  </aside>
+
+  <!-- محتوای اصلی -->
+  <main class="main-content">
+    <div class="header-box">
+      <h1 id="module-title">طراح آزمون استاندارد</h1>
+      <p id="module-desc">پایه‌ی تحصیلی و مبحث درسی را وارد کرده یا متن/فایل جزوه را بارگذاری کنید تا هوش مصنوعی فوراً سوالات تحلیلی تولید کند.</p>
+    </div>
+
+    <div class="card">
+      <div class="form-group">
+        <label>پایه و مقطع تحصیلی:</label>
+        <select id="grade">
+          <option value="هفتم">متوسطه اول - هفتم</option>
+          <option value="هشتم" selected>متوسطه اول - هشتم</option>
+          <option value="نهم">متوسطه اول - نهم</option>
+          <option value="دهم">متوسطه دوم - دهم</option>
+          <option value="یازدهم">متوسطه دوم - یازدهم</option>
+          <option value="دوازدهم">متوسطه دوم - دوازدهم</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>مبحث دقیق یا عنوان فصل:</label>
+        <input type="text" id="topic" placeholder="مثال: علوم هشتم - از درون اتم چه خبر؟">
+      </div>
+
+      <div class="form-group">
+        <label>توضیحات تکمیلی یا بخشی از متن کتاب (اختیاری):</label>
+        <textarea id="extra-notes" placeholder="اگر نکته خاصی مد نظر دارید یا متن یک صفحه را می‌خواهید اینجا بنویسید..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>بارگذاری فایل جزوه یا متن درس (TXT / PDF):</label>
+        <div class="file-upload-box" onclick="document.getElementById('file-input').click()">
+          <span style="font-size: 1.5rem;">📎</span>
+          <div class="file-upload-label" id="file-label">برای انتخاب فایل کتاب یا جزوه اینجا کلیک کنید</div>
+          <input type="file" id="file-input" accept=".txt,.pdf,.docx" onchange="handleFile(this)">
+        </div>
+      </div>
+
+      <button class="btn-submit" id="submit-btn" onclick="generateContent()">
+        <span>تولید هوشمند محتوا</span>
+      </button>
+    </div>
+
+    <!-- خروجی -->
+    <div class="output-card" id="output-box">
+      <div class="output-header">
+        <strong id="output-title">نتیجه تولید شده:</strong>
+        <button class="copy-btn" onclick="copyOutput()">📋 کپی متن</button>
+      </div>
+      <div class="output-content" id="output-text"></div>
+    </div>
+  </main>
+
+  <script>
+    let currentMode = 'exam';
+    let uploadedFileText = "";
+
+    function switchTab(mode, title) {
+      currentMode = mode;
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.getElementById('module-title').innerText = title;
+    }
+
+    function handleFile(input) {
+      const file = input.files[0];
+      if (file) {
+        document.getElementById('file-label').innerText = "فایل انتخاب شد: " + file.name;
+        // اگر فایل متنی ساده باشد، محتوایش را می‌خوانیم
+        if (file.type === "text/plain") {
+          const reader = new FileReader();
+          reader.onload = e => uploadedFileText = e.target.result;
+          reader.readAsText(file);
+        } else {
+          uploadedFileText = `[کاربر فایل "${file.name}" را ضمیمه کرده است]`;
+        }
+      }
+    }
+
+    // آدرس وب‌هوک برای اتصال به هوش مصنوعی (در مرحله بعد تکمیل می‌شود)
+    const WEBHOOK_URL = ""; 
+
+    async function generateContent() {
+      const grade = document.getElementById('grade').value;
+      const topic = document.getElementById('topic').value.trim();
+      const extraNotes = document.getElementById('extra-notes').value.trim();
+      const btn = document.getElementById('submit-btn');
+      const outputBox = document.getElementById('output-box');
+      const outputText = document.getElementById('output-text');
+
+      if (!topic) {
+        alert("لطفاً عنوان مبحث را وارد کنید.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = "درحال پردازش با هوش مصنوعی... (چند لحظه صبر کنید)";
+      outputBox.style.display = "block";
+      outputText.innerText = "درحال آماده‌سازی پاسخ متناسب با مبحث: " + topic + "...";
+
+      const payload = {
+        mode: currentMode,
+        grade: grade,
+        topic: topic,
+        notes: extraNotes,
+        fileContent: uploadedFileText
+      };
+
+      if (!WEBHOOK_URL) {
+        // حالت موقت قبل از اتصال وب‌هوک: پاسخ داینامیک متناسب با مبحث کاربر تولید می‌کند
+        setTimeout(() => {
+          let demoResponse = "";
+          if (currentMode === 'exam') {
+            demoResponse = `🎯 آزمون تستی و تشریحی طراحی شده برای: ${topic} (${grade})\n\n` +
+              `۱. با توجه به ساختار اتم، اگر تعداد الکترون‌ها و پروتون‌ها در یک ذره یکسان نباشد چه نامیده می‌شود؟\n` +
+              `الف) ایزوتوپ   ب) یون   ج) مولکول   د) عنصر خنثی\n\n` +
+              `۲. مفهوم عدد اتمی و عدد جرمی را با ذکر مثال برای عنصر کربن توضیح دهید.\n\n` +
+              `۳. سوال مفهومی و چالشی:\nچرا جرم یک اتم تقریباً برابر با مجموع جرم پروتون‌ها و نوترون‌های هسته در نظر گرفته می‌شود؟`;
+          } else {
+            demoResponse = `📋 طرح درس اختصاصی مبحث: ${topic}\n` +
+              `- پایه: ${grade}\n` +
+              `- هدف کلی: آشنایی دانش‌آموزان با مفاهیم پایه‌ای ${topic}\n` +
+              `- روش تدریس: کاوشگری و بارش فکری با استفاده از مدل‌سازی ذهنی`;
+          }
+          outputText.innerText = demoResponse;
+          btn.disabled = false;
+          btn.innerText = "تولید مجدد محتوا";
+        }, 1200);
+        return;
+      }
+
+      // ارسال درخواست به سرور هوش مصنوعی واقعی
+      try {
+        const response = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        outputText.innerText = data.result || "خطا در دریافت نتیجه";
+      } catch (err) {
+        outputText.innerText = "خطا در ارتباط با سرور هوش مصنوعی: " + err.message;
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "تولید هوشمند محتوا";
+      }
+    }
+
+    function copyOutput() {
+      const text = document.getElementById('output-text').innerText;
+      navigator.clipboard.writeText(text);
+      alert("متن با موفقیت کپی شد!");
+    }
+  </script>
+</body>
+</html>
